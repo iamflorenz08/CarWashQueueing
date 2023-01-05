@@ -281,7 +281,21 @@ public class MainPanel extends javax.swing.JPanel {
                 .addComponent(TableScrollContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
+    private void init() {
+        cars = new LinkedList<>();
+        LocalDate ld = LocalDate.now();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                LocalTime time = LocalTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
+                lblTime.setText(formatter.format(time));
+            }
+        }, 0, 1000);
+        lblDate.setText(ld.getMonth() + " " + ld.getDayOfMonth() + ", " + ld.getYear());
+    }
+    
     private void btnEnqueueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEnqueueMouseClicked
         // TODO add your handling code here:
         enqueueDialog = components.EnqueueDialog.getInstance();
@@ -300,7 +314,7 @@ public class MainPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
 
         if (cars.isEmpty()) {
-            int result = JOptionPane.showConfirmDialog(this, "Enqueue first.", "Warning",
+            int result = JOptionPane.showConfirmDialog(this, "Add car first.", "Warning",
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.WARNING_MESSAGE);
         }
@@ -308,6 +322,7 @@ public class MainPanel extends javax.swing.JPanel {
         if (!cars.isEmpty()) {
             cars.removeFirst();
         }
+        
         notifyDatasetHasChanged();
     }//GEN-LAST:event_btnWashMouseClicked
 
@@ -322,17 +337,18 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void notifyDatasetHasChanged() {
         int y = 0;
-        int waitingCars = 0;
+        
         Table.removeAll();
-
         lblWaiting.setText("0");
         lblInfront.setText("Empty");
-
+        
+        //header info
         if (!cars.isEmpty()) {
             cars.getFirst().setStatus("In Front");
             lblInfront.setText(cars.getFirst().getPlate_no());
         }
 
+        //table
         for (int i = 0; i < cars.size(); i++) {
             Color color = i % 2 == 0 ? new Color(255, 252, 246) : new Color(233, 245, 255);
             rows = new components.Rows();
@@ -345,9 +361,7 @@ public class MainPanel extends javax.swing.JPanel {
             Table.add(rows, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, y, -1, -1));
             y += 30;
 
-            if (cars.get(i).getStatus().equals("Waiting")) {
-                waitingCars += 1;
-            }
+           
         }
 
         lblWaiting.setText(String.valueOf(cars.size()));
@@ -384,18 +398,4 @@ public class MainPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblWaiting;
     // End of variables declaration//GEN-END:variables
 
-    private void init() {
-        cars = new LinkedList<>();
-        LocalDate ld = LocalDate.now();
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                LocalTime time = LocalTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
-                lblTime.setText(formatter.format(time));
-            }
-        }, 0, 1000);
-        lblDate.setText(ld.getMonth() + " " + ld.getDayOfMonth() + ", " + ld.getYear());
-    }
 }
