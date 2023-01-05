@@ -21,6 +21,7 @@ public class MainForm extends javax.swing.JFrame {
 
     public MainForm() {
         initComponents();
+        //initialization
         init();
     }
 
@@ -204,7 +205,6 @@ public class MainForm extends javax.swing.JFrame {
     private void init() {
         mainPanel1.setVisible(false);
         lblInvalid.setVisible(false);
-
         mainPanel1.setLogoutCallback(new LogOutInterface() {
             @Override
             public void logout() {

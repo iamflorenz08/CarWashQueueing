@@ -17,6 +17,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -31,6 +32,7 @@ public class MainPanel extends javax.swing.JPanel {
     private LinkedList<CarModel> cars;
     private components.Rows rows;
     private Interface.LogOutInterface logoutCallback;
+
     public MainPanel() {
         initComponents();
         init();
@@ -296,6 +298,13 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void btnWashMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnWashMouseClicked
         // TODO add your handling code here:
+
+        if (cars.isEmpty()) {
+            int result = JOptionPane.showConfirmDialog(this, "Enqueue first.", "Warning",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+        }
+
         if (!cars.isEmpty()) {
             cars.removeFirst();
         }
@@ -310,14 +319,13 @@ public class MainPanel extends javax.swing.JPanel {
     public void setLogoutCallback(LogOutInterface logoutCallback) {
         this.logoutCallback = logoutCallback;
     }
-    
-    
+
     private void notifyDatasetHasChanged() {
         int y = 0;
         int waitingCars = 0;
         Table.removeAll();
 
-        lblWaiting.setText("2");
+        lblWaiting.setText("0");
         lblInfront.setText("Empty");
 
         if (!cars.isEmpty()) {
@@ -327,7 +335,6 @@ public class MainPanel extends javax.swing.JPanel {
 
         for (int i = 0; i < cars.size(); i++) {
             Color color = i % 2 == 0 ? new Color(255, 252, 246) : new Color(233, 245, 255);
-
             rows = new components.Rows();
             rows.setPlateNumber(cars.get(i).getPlate_no());
             rows.setCarModel(cars.get(i).getModel());
@@ -343,7 +350,7 @@ public class MainPanel extends javax.swing.JPanel {
             }
         }
 
-        lblWaiting.setText(String.valueOf(waitingCars));
+        lblWaiting.setText(String.valueOf(cars.size()));
 
         TableScrollContainer.repaint();
         TableScrollContainer.revalidate();
